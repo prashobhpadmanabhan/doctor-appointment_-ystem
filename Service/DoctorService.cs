@@ -50,15 +50,19 @@ namespace DoctorAppointmentSystemAPI.Service
             {
                 throw new KeyNotFoundException("Doctor not found.");
             }
+
             var schedule = doctor.TimeSlots
                 .Where(slot => slot.DateTime.Date == date.Date && slot.IsBooked)
-                .Select(slot => new
-                {
-                    Time = slot.DateTime.ToString("hh:mm tt"),
-                    PatientName = "Patient Name", // Replace with actual patient name if available
-                    Purpose = "Purpose", // Replace with actual purpose if available
-                    Status = "Scheduled"
-                })
+                .Join(_context.Appointments,
+                    slot => slot.Id,
+                    appointment => appointment.SlotId,
+                    (slot, appointment) => new
+                    {
+                        Time = slot.DateTime.ToString("hh:mm tt"),
+                        PatientName = appointment.PatientName,
+                        Purpose = appointment.Purpose,
+                        Status = "Scheduled"
+                    })
                 .ToList();
 
             return new

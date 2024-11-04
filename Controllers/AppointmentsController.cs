@@ -9,7 +9,7 @@ namespace DoctorAppointmentSystemAPI.Controllers
     [Route("api/[controller]")]
     public class AppointmentsController : ControllerBase
     {
-        private readonly AppointmentService _appointmentService;
+        private readonly AppointmentService _appointmentService;    
 
         public AppointmentsController(AppointmentService appointmentService)
         {
@@ -17,8 +17,13 @@ namespace DoctorAppointmentSystemAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> BookAppointment( AppointmentRequest request)
+        public async Task<IActionResult> BookAppointment( [FromBody] AppointmentRequest request)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             try
             {
                 var appointment = await _appointmentService.BookAppointment(request);

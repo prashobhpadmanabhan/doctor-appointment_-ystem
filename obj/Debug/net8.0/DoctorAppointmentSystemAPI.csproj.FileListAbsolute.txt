@@ -119,3 +119,4 @@ D:\Edstem\Assesment2\DoctorAppointmentSystemAPI\DoctorAppointmentSystemAPI\obj\D
 D:\Edstem\Assesment2\DoctorAppointmentSystemAPI\DoctorAppointmentSystemAPI\obj\Debug\net8.0\ref\DoctorAppointmentSystemAPI.dll
 D:\Edstem\Assesment2\DoctorAppointmentSystemAPI\DoctorAppointmentSystemAPI\bin\Debug\net8.0\Npgsql.dll
 D:\Edstem\Assesment2\DoctorAppointmentSystemAPI\DoctorAppointmentSystemAPI\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+D:\Edstem\Assesment2\DoctorAppointmentSystemAPI\DoctorAppointmentSystemAPI\obj\Debug\net8.0\DoctorAppointmentSystemAPI.sourcelink.json

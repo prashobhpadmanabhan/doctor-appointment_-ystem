@@ -5,6 +5,8 @@
         public int Id { get; set; }
         public int SlotId { get; set; }
         public string PatientName { get; set; }
+
+        public string PatientEmail { get; set; }
         public string Purpose { get; set; }
 
     }
