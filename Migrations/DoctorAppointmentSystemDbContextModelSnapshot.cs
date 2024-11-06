@@ -30,9 +30,8 @@ namespace DoctorAppointmentSystemAPI.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("PatientEmail")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<DateTime>("AppointmentTime")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("PatientName")
                         .IsRequired()
@@ -46,6 +45,8 @@ namespace DoctorAppointmentSystemAPI.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SlotId");
 
                     b.ToTable("Appointments");
                 });
@@ -93,6 +94,17 @@ namespace DoctorAppointmentSystemAPI.Migrations
                     b.HasIndex("DoctorId");
 
                     b.ToTable("TimeSlots");
+                });
+
+            modelBuilder.Entity("DoctorAppointmentSystemAPI.Data.Appointment", b =>
+                {
+                    b.HasOne("DoctorAppointmentSystemAPI.Data.TimeSlot", "Slot")
+                        .WithMany()
+                        .HasForeignKey("SlotId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Slot");
                 });
 
             modelBuilder.Entity("DoctorAppointmentSystemAPI.Data.TimeSlot", b =>

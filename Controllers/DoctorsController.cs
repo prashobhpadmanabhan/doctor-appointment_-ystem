@@ -1,61 +1,61 @@
-﻿using DoctorAppointmentSystemAPI.Data;
-using DoctorAppointmentSystemAPI.Service;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using DoctorAppointmentSystemAPI.Data;
+using DoctorAppointmentSystemAPI.Service;
 
 namespace DoctorAppointmentSystemAPI.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("api/[controller]")] 
     public class DoctorsController : ControllerBase
     {
-        private readonly DoctorService _doctorService;
+        private readonly DoctorAppointmentService _service;
 
-        public DoctorsController(DoctorService doctorService)
+        public DoctorsController(DoctorAppointmentService service)
         {
-            _doctorService = doctorService;
+            _service = service;
         }
 
         [HttpGet("{id}/slots")]
-        public async Task<IActionResult> GetAvailableSlots(int id, DateTime date, int duration)
+        public async Task<IActionResult> GetAvailableTimeSlots(int id, [FromQuery] DateTime date, [FromQuery] int duration)
         {
+            date = date.ToUniversalTime();
+
             try
             {
-                var availableSlots = await _doctorService.GetAvailableSlots(id, date, duration);
-                return Ok(availableSlots);
+                var result = await _service.GetAvailableTimeSlotsForDoctorAsync(id, date, duration);
+                return Ok(result);
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new { message = ex.Message });
             }
-
-        }
-
-        [HttpGet("{id}/schedule")]
-        public async Task<IActionResult> GetDoctorSchedule(int id, DateTime date)
-        {
-            try
+            catch (Exception ex)
             {
-                var schedule = await _doctorService.GetDoctorSchedule(id, date);
-                return Ok(schedule);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
+                return StatusCode(500, new { message = "An error occurred while processing your request.", details = ex.Message });
             }
         }
+    
 
         
+        [HttpGet("{id}/schedule")]
+        public async Task<IActionResult> GetDoctorSchedule(int id, [FromQuery] DateTime? date = null)
+        {
+            var scheduleDate = (date ?? DateTime.Today).ToUniversalTime();
+            var appointments = await _service.GetDoctorScheduleAsync(scheduleDate);
+            if (!appointments.Any())
+                return NotFound("No appointments found for the specified date.");
+
+            return Ok(new
+            {
+                Date = scheduleDate.ToString("yyyy-MM-dd"),
+                Appointments = appointments
+            });
+        }
     }
 }
-
-
-
-
-
-       
-        
-           
-        
-
-        

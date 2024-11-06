@@ -1,5 +1,5 @@
 using DoctorAppointmentSystemAPI.Data;
-
+using DoctorAppointmentSystemAPI.Exceptions;
 using DoctorAppointmentSystemAPI.Service;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -13,10 +13,7 @@ builder.Services.AddDbContext<DoctorAppointmentSystemDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DoctorAppointmentSystemDbConnectionString")));
 
 
-
-builder.Services.AddScoped<DoctorService>();
-builder.Services.AddScoped<AppointmentService>();
-
+builder.Services.AddScoped<DoctorAppointmentService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -33,6 +30,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 
